@@ -142,7 +142,7 @@
                     while ($row = $result->fetch()) {
                         $num += 1;
                         if ($num < 11) {
-                            if ($row['score'] == $TPM) {
+                            if ($row['score'] == $TPM && $row['naam'] == $_COOKIE['name']) {
                                 ?>
                             <tr class='me'>
                                 <td class='td'><?php echo $num ?></td>

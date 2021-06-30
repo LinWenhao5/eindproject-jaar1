@@ -1,12 +1,64 @@
 <?php
 include "connect.php";
-
+if (!isset($_COOKIE['user'])) {
+    header('location: login.php');
+    exit();
+}
 ?>
 <!doctype html>
 <html>
     <head></head>
     <body>
         <h1>Admin page</h1>
+        <button onclick="window.location.href='admin.php?mode=home';">Home</button>
+        <br></br>
+        <?php
+        if ($_GET['mode'] == 'home') {
+            ?>
+            <p>Wat will je doen<p>
+            <button onclick="window.location.href='admin.php?mode=leaderboard';" type="button">Leaderboard veranderen</button>
+            <button onclick="window.location.href='admin.php?mode=code';" type="button">Toevoegen van code</button>
+        <?php
+        }
+        if ($_GET['mode'] == 'code') {
+            
+            ?>
+            <form method="POST">
+                <textarea style="resize: none;" name="code" placeholder="Doe hier de code" cols="30" rows="10" id="code" required></textarea>
+                <br></br>
+                <input type="radio" id="HTML" name="taal" value="HTML">
+                <label for="HTML">HTML</label><br>
+                <input type="radio" id="PHP" name="taal" value="PHP">
+                <label for="PHP">PHP</label><br>
+                <input type="radio" id="JS" name="taal" value="JS">
+                <label for="JS">JavaScript</label>
+                <br>
+                <input type="radio" id="C" name="taal" value="C">
+                <label for="C">C</label>
+                <br></br>
+                <input type="submit" name="submit" class="button" value="Submit code">
+            </form>
+            <?php
+            if (!empty($_POST['code']) || empty($_POST['taal'])) {
+                echo "empty";
+                if (isset($_POST['submit'])) {
+                    $_POST['code'];
+                    $_POST['taal'];
+                        echo "gg";
+                        $sql = "INSERT INTO code (text, taal) VALUES (:text, :taal)";
+                        $pdo->prepare($sql)->execute([
+                            ':text' => $_POST['code'],
+                            ':taal' => $_POST['taal']
+                        ]);
+                        $_POST['code'] = '';
+                        $_POST['taal'] = '';
+                        header('location: admin.php?mode=code');
+                    }
+                }
+            }
+        if ($_GET['mode'] == 'leaderboard') {
+            ?>
+        
         <form method="post">
             <label for="username">Wat is het id van de score die je wilt verwijderen <br/></label>
             <input type="id" name="id" value="">
@@ -95,6 +147,10 @@ include "connect.php";
                     ?><div class=""></div>
                 </table>
             </div>
+        <?php 
+        }
+        ?>
+        <br></br>
         <form method="POST" class="logout" action="login.php">
         <input type="submit" class="btn" name="logout_user" value="Logout">
         </form>

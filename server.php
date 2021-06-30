@@ -22,7 +22,7 @@ if (isset($_POST['login_user'])) {
         $results = mysqli_query($db, $query);
         if (mysqli_num_rows($results) == 1) {
             setcookie('user', $username, 0, "/");
-            header('location: admin.php');
+            header('location: admin.php?mode=home');
         } else {
             array_push($errors, "Wrong username/password combination");
         }
